@@ -270,6 +270,9 @@ tbody tr:hover { background: #faf8f5; }
           <div class="fg"><label>Tên sản phẩm *</label><input type="text" id="f-name" placeholder="VD: Nhẫn hoa đá xanh" /></div>
           <div class="fg"><label>Emoji *</label><input type="text" id="f-emoji" placeholder="💍 📿 ✨ 🪙 ❤️" /></div>
         </div>
+        <div class="form-grid">
+          <div class="fg" style="width:100%"><label>Đường dẫn ảnh</label><input type="text" id="f-image" placeholder="VD: image/23.png hoặc https://..." /></div>
+        </div>
         <div class="form-grid cols3">
           <div class="fg"><label>Giá (VNĐ) *</label><input type="number" id="f-price" placeholder="250000" min="0" /></div>
           <div class="fg"><label>Danh mục *</label>
@@ -574,6 +577,7 @@ function renderProductList() {
           ${p.status===0 ? `<span class="badge badge-hidden" style="margin-left:6px">Đang ẩn</span>` : ''}
         </div>
         <div class="prod-meta">${CAT_MAP[p.cat]||p.cat}${p.note?' · <em>'+p.note+'</em>':''}</div>
+        ${p.image ? `<div class="prod-image-preview">${p.image}</div>` : ''}
       </div>
       <div class="prod-price">${fmt(p.price)}</div>
       <div class="prod-actions">
@@ -591,7 +595,7 @@ function showProductForm(data) {
   if (!data) {
     document.getElementById('pform-title').textContent = '➕ Thêm sản phẩm mới';
     document.getElementById('edit-idx').value = '';
-    ['f-name','f-emoji','f-price','f-note'].forEach(id => document.getElementById(id).value = '');
+    ['f-name','f-emoji','f-image','f-price','f-note'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('f-cat').value = 'nhan';
     document.getElementById('f-badge').value = '';
     document.getElementById('f-status').value = '1';
@@ -610,6 +614,7 @@ function editProduct(i) {
   document.getElementById('edit-idx').value = i;
   document.getElementById('f-name').value  = p.name;
   document.getElementById('f-emoji').value = p.emoji;
+  document.getElementById('f-image').value = p.image || '';
   document.getElementById('f-price').value = p.price;
   document.getElementById('f-cat').value   = p.cat;
   document.getElementById('f-badge').value = p.badge || '';
@@ -621,6 +626,7 @@ function editProduct(i) {
 function saveProduct() {
   const name  = document.getElementById('f-name').value.trim();
   const emoji = document.getElementById('f-emoji').value.trim();
+  const image = document.getElementById('f-image').value.trim();
   const price = parseInt(document.getElementById('f-price').value);
   const cat   = document.getElementById('f-cat').value;
   const badge = document.getElementById('f-badge').value;
@@ -635,11 +641,11 @@ function saveProduct() {
   const idx = document.getElementById('edit-idx').value;
 
   if (idx !== '') {
-    products[parseInt(idx)] = { ...products[parseInt(idx)], name, emoji, price, cat, badge:badge||null, badgeText, status, note };
+    products[parseInt(idx)] = { ...products[parseInt(idx)], name, emoji, image, price, cat, badge:badge||null, badgeText, status, note };
     showToast('✅ Đã cập nhật sản phẩm!');
   } else {
     const newId = products.length ? Math.max(...products.map(p=>p.id)) + 1 : 1;
-    products.push({ id:newId, name, emoji, price, cat, badge:badge||null, badgeText, status, note });
+    products.push({ id:newId, name, emoji, image, price, cat, badge:badge||null, badgeText, status, note });
     showToast('✅ Đã thêm sản phẩm mới!');
   }
 
