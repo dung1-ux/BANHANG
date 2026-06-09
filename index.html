@@ -3,14 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shop Trang Sức — Tên Shop Của Bạn</title>
+<title>Shop Trang Sức — VU NHU DUNG</title>
+<meta name="description" content="Shop trang sức thủ công tinh tế — Nhẫn, vòng tay, bông tai, dây chuyền từ bạc 925, vàng 14K và đá thiên nhiên. Liên hệ đặt hàng tại Hải Dương.">
+<meta property="og:title" content="VU NHU DUNG — Trang Sức Thủ Công">
+<meta property="og:description" content="Nhẫn, vòng tay, bông tai, dây chuyền — được làm thủ công từ bạc, vàng, và đá thiên nhiên.">
+<meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
- body{
-  overflow-x:hidden;
-}
+  body { overflow-x: hidden; }
 
   :root {
     --gold: #b8955a;
@@ -55,9 +57,7 @@
   }
   .logo span { color: var(--gold); font-style: italic; }
 
-  .nav-links {
-    display: flex; gap: 2rem; list-style: none;
-  }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
   .nav-links a {
     text-decoration: none; font-size: 14px;
     color: var(--muted); transition: color 0.2s;
@@ -151,9 +151,7 @@
     display: flex; gap: 2rem; margin-top: 4rem;
     justify-content: center;
   }
-  .hero-decor-item {
-    text-align: center;
-  }
+  .hero-decor-item { text-align: center; }
   .hero-decor-num {
     font-family: 'Cormorant Garamond', serif;
     font-size: 36px; font-weight: 600; color: var(--dark);
@@ -251,30 +249,21 @@
     font-size: 10px; font-weight: 500;
     padding: 3px 10px; border-radius: 10px;
   }
-  .badge-hot { background: #fde8e8; color: #c0392b; }
-  .badge-new { background: #e8f5e8; color: #27ae60; }
+  .badge-hot  { background: #fde8e8; color: #c0392b; }
+  .badge-new  { background: #e8f5e8; color: #27ae60; }
   .badge-sale { background: #fff3e0; color: #e67e22; }
 
   .product-info { padding: 1rem 1.2rem 1.2rem; }
-  .product-name {
-    font-size: 14px; font-weight: 500; color: var(--dark);
-    margin-bottom: 3px;
-  }
+  .product-name { font-size: 14px; font-weight: 500; color: var(--dark); margin-bottom: 3px; }
   .product-cat {
     font-size: 11px; color: var(--muted);
     text-transform: uppercase; letter-spacing: 0.06em;
     margin-bottom: 10px;
   }
-  .product-bottom {
-    display: flex; align-items: center; justify-content: space-between;
-  }
+  .product-bottom { display: flex; align-items: center; justify-content: space-between; }
   .product-price {
     font-family: 'Cormorant Garamond', serif;
     font-size: 20px; font-weight: 600; color: var(--gold);
-  }
-  .product-price-old {
-    font-size: 12px; color: var(--muted);
-    text-decoration: line-through; margin-left: 6px;
   }
   .add-btn {
     width: 34px; height: 34px; border-radius: 50%;
@@ -284,6 +273,59 @@
     transition: background 0.2s, transform 0.15s; line-height: 1;
   }
   .add-btn:hover { background: var(--gold); transform: scale(1.1); }
+
+  /* ─── PRODUCT DETAIL MODAL ─── */
+  .detail-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5); z-index: 400;
+    align-items: center; justify-content: center;
+    padding: 1rem;
+  }
+  .detail-overlay.open { display: flex; }
+  .detail-modal {
+    background: var(--white); border-radius: var(--radius);
+    max-width: 480px; width: 100%;
+    overflow: hidden;
+  }
+  .detail-img {
+    height: 220px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 80px;
+    background: linear-gradient(135deg, #f9f5f0 0%, #f0e8d8 100%);
+    position: relative;
+  }
+  .detail-close {
+    position: absolute; top: 12px; right: 12px;
+    background: rgba(255,255,255,0.9); border: none;
+    width: 32px; height: 32px; border-radius: 50%;
+    cursor: pointer; font-size: 16px; color: var(--muted);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .detail-body { padding: 1.5rem; }
+  .detail-cat {
+    font-size: 11px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px;
+  }
+  .detail-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px; font-weight: 600; color: var(--dark);
+    margin-bottom: 8px;
+  }
+  .detail-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; font-weight: 600; color: var(--gold);
+    margin-bottom: 1rem;
+  }
+  .detail-desc { font-size: 14px; color: var(--muted); margin-bottom: 1.5rem; line-height: 1.7; }
+  .detail-add-btn {
+    width: 100%; padding: 14px;
+    background: var(--dark); color: #fff;
+    border: none; border-radius: 32px;
+    font-size: 15px; font-weight: 500;
+    cursor: pointer; font-family: 'DM Sans', sans-serif;
+    transition: background 0.2s;
+  }
+  .detail-add-btn:hover { background: var(--gold); }
 
   /* ─── FEATURES STRIP ─── */
   .features {
@@ -441,7 +483,7 @@
   }
   .zalo-order-btn:hover { opacity: 0.85; }
 
-  /* ─── MODAL ─── */
+  /* ─── ORDER MODAL ─── */
   .modal-overlay {
     display: none; position: fixed; inset: 0;
     background: rgba(0,0,0,0.5); z-index: 400;
@@ -494,90 +536,30 @@
     z-index: 500; pointer-events: none; white-space: nowrap;
   }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-/* ─── RESPONSIVE FIX ─── */
 
-html,body{
-  width:100%;
-  overflow-x:hidden;
-}
+  /* ─── RESPONSIVE ─── */
+  html, body { width: 100%; overflow-x: hidden; }
 
-@media (max-width:768px){
-
-  nav{
-    padding:12px;
-    gap:10px;
+  @media (max-width: 768px) {
+    nav { padding: 12px; gap: 10px; }
+    .logo { flex: 1; min-width: 0; font-size: 16px; line-height: 1.2; overflow: hidden; }
+    .nav-links { display: none; }
+    .cart-btn { padding: 8px 12px; font-size: 13px; flex-shrink: 0; }
+    .hero { min-height: auto; padding: 3rem 1rem; }
+    .hero h1 { font-size: 36px; }
+    .hero-cta { flex-direction: column; }
+    .btn-primary, .btn-outline { width: 100%; }
+    .cat-grid, .product-grid { grid-template-columns: repeat(2, 1fr); }
+    .cart-panel { width: 100vw; max-width: 100vw; right: -100vw; }
+    .cart-panel.open { right: 0; }
   }
 
-  .logo{
-    flex:1;
-    min-width:0;
-    font-size:16px;
-    line-height:1.2;
-    overflow:hidden;
+  @media (max-width: 480px) {
+    .logo { font-size: 14px; }
+    .hero h1 { font-size: 30px; }
+    .hero-divider { display: none; }
+    .hero-decor { flex-direction: column; }
   }
-
-  .nav-links{
-    display:none;
-  }
-
-  .cart-btn{
-    padding:8px 12px;
-    font-size:13px;
-    flex-shrink:0;
-  }
-
-  .hero{
-    min-height:auto;
-    padding:3rem 1rem;
-  }
-
-  .hero h1{
-    font-size:36px;
-  }
-
-  .hero-cta{
-    flex-direction:column;
-  }
-
-  .btn-primary,
-  .btn-outline{
-    width:100%;
-  }
-
-  .cat-grid,
-  .product-grid{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .cart-panel{
-    width:100vw;
-    max-width:100vw;
-    right:-100vw;
-  }
-
-  .cart-panel.open{
-    right:0;
-  }
-}
-
-@media (max-width:480px){
-
-  .logo{
-    font-size:14px;
-  }
-
-  .hero h1{
-    font-size:30px;
-  }
-
-  .hero-divider{
-    display:none;
-  }
-
-  .hero-decor{
-    flex-direction:column;
-  }
-}
 </style>
 </head>
 <body>
@@ -608,17 +590,17 @@ html,body{
   </div>
   <div class="hero-decor">
     <div class="hero-decor-item">
-    
+      <div class="hero-decor-num">12+</div>
       <div class="hero-decor-label">Mẫu trang sức</div>
     </div>
     <div class="hero-divider"></div>
     <div class="hero-decor-item">
-     
+      <div class="hero-decor-num">500+</div>
       <div class="hero-decor-label">Khách hài lòng</div>
     </div>
     <div class="hero-divider"></div>
     <div class="hero-decor-item">
-     
+      <div class="hero-decor-num">100%</div>
       <div class="hero-decor-label">Hàng chính hãng</div>
     </div>
   </div>
@@ -628,28 +610,7 @@ html,body{
 <section class="section">
   <div class="section-sub">Danh mục</div>
   <h2 class="section-title">Chọn theo <em>loại</em></h2>
-  <div class="cat-grid">
-    <div class="cat-card" onclick="scrollToFilter('nhan')">
-      <span class="cat-emoji">💍</span>
-      <div class="cat-name">Nhẫn</div>
-      <div class="cat-count">3 mẫu</div>
-    </div>
-    <div class="cat-card" onclick="scrollToFilter('vong')">
-      <span class="cat-emoji">📿</span>
-      <div class="cat-name">Vòng tay</div>
-      <div class="cat-count">3 mẫu</div>
-    </div>
-    <div class="cat-card" onclick="scrollToFilter('bong')">
-      <span class="cat-emoji">✨</span>
-      <div class="cat-name">Bông tai</div>
-      <div class="cat-count">3 mẫu</div>
-    </div>
-    <div class="cat-card" onclick="scrollToFilter('day')">
-      <span class="cat-emoji">🪙</span>
-      <div class="cat-name">Dây chuyền</div>
-      <div class="cat-count">3 mẫu</div>
-    </div>
-  </div>
+  <div class="cat-grid" id="cat-grid"></div>
 </section>
 
 <!-- ═══ PRODUCTS ═══ -->
@@ -696,16 +657,15 @@ html,body{
   <h2 class="section-title">Kết nối <em>với chúng tôi</em></h2>
   <p style="color:var(--muted);font-size:14px;margin-top:0.5rem">Đặt hàng, tư vấn mẫu, hoặc yêu cầu thiết kế riêng</p>
   <div class="contact-cards">
-    <a href="https://zalo.me/0123456789" target="_blank" class="contact-card">
+    <!-- FIX: Dùng đúng số thật 0961557973 -->
+    <a href="https://zalo.me/0961557973" target="_blank" class="contact-card">
       <div class="contact-icon">💬</div>
       <div class="contact-name">Zalo</div>
-      <!-- ✏️ Thay số điện thoại Zalo của bạn vào đây -->
       <div class="contact-val">0961557973</div>
     </a>
     <a href="https://www.facebook.com/share/14nnUEt1CiG/?mibextid=wwXIfr" target="_blank" class="contact-card">
       <div class="contact-icon">📘</div>
       <div class="contact-name">Facebook / Instagram</div>
-      <!-- ✏️ Thay link Facebook của bạn vào href phía trên -->
       <div class="contact-val">SHOP VU NHU DUNG</div>
     </a>
   </div>
@@ -713,7 +673,6 @@ html,body{
 
 <!-- ═══ FOOTER ═══ -->
 <footer>
-  <!-- ✏️ Thay tên shop của bạn vào đây -->
   © 2025 <strong>VU NHU DUNG</strong> · Thiết kế với ❤️ · Hải Dương, Việt Nam
 </footer>
 
@@ -744,7 +703,6 @@ html,body{
     <p>Chọn cách bạn muốn liên hệ để hoàn tất đơn hàng</p>
     <div class="order-summary" id="order-summary"></div>
     <div class="modal-actions">
-      <!-- ✏️ Thay số Zalo và link Facebook của bạn -->
       <a id="zalo-link" href="" target="_blank" class="modal-zalo">💬 Nhắn Zalo</a>
       <a id="fb-link" href="https://www.facebook.com/share/14nnUEt1CiG/?mibextid=wwXIfr" target="_blank" class="modal-fb">📘 Nhắn Facebook</a>
     </div>
@@ -752,47 +710,71 @@ html,body{
   </div>
 </div>
 
+<!-- ═══ PRODUCT DETAIL MODAL ═══ -->
+<div class="detail-overlay" id="detail-overlay" onclick="closeDetail(event)">
+  <div class="detail-modal" id="detail-modal">
+    <div class="detail-img" id="detail-img">
+      <button class="detail-close" onclick="closeDetailBtn()">✕</button>
+      <span id="detail-emoji" style="font-size:80px"></span>
+      <span class="product-badge" id="detail-badge" style="display:none"></span>
+    </div>
+    <div class="detail-body">
+      <div class="detail-cat" id="detail-cat"></div>
+      <div class="detail-name" id="detail-name"></div>
+      <div class="detail-price" id="detail-price"></div>
+      <div class="detail-desc" id="detail-desc"></div>
+      <button class="detail-add-btn" id="detail-add-btn">+ Thêm vào giỏ hàng</button>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ TOAST ═══ -->
 <div class="toast" id="toast"></div>
 
 <script>
-  // ═══════════════════════════════════════════════════
-  // ✏️ CẤU HÌNH — THAY ĐỔI THÔNG TIN CỦA BẠN TẠI ĐÂY
-  // ═══════════════════════════════════════════════════
   const CONFIG = {
-    shopName: 'VU NHU DUNG',      // Tên cửa hàng
-    zaloPhone: '0961557973',            // Số Zalo của bạn
-    facebookUrl: 'https://www.facebook.com/share/14nnUEt1CiG/?mibextid=wwXIfr', // Link trang FB/IG của bạn
+    shopName: 'VU NHU DUNG',
+    zaloPhone: '0961557973',
+    facebookUrl: 'https://www.facebook.com/share/14nnUEt1CiG/?mibextid=wwXIfr',
   };
 
-  // ═══════════════════════════════════════════════════
-  // ✏️ SẢN PHẨM — THÊM / XÓA / SỬA THÔNG TIN SẢN PHẨM
-  // ═══════════════════════════════════════════════════
   const PRODUCTS = [
-    { id:1,  name:'Nhẫn hoa mặt đá xanh', cat:'nhan', emoji:'💍', price:250000, badge:'hot',  badgeText:'Bán chạy' },
-    { id:2,  name:'Nhẫn xoắn vàng 14K',   cat:'nhan', emoji:'🪡', price:320000, badge:null,   badgeText:'' },
-    { id:3,  name:'Nhẫn bạc 925 đơn giản',cat:'nhan', emoji:'⭕', price:180000, badge:'sale', badgeText:'Giảm giá' },
-    { id:4,  name:'Vòng tay ngọc trai trắng', cat:'vong', emoji:'📿', price:450000, badge:'new',  badgeText:'Mới về' },
-    { id:5,  name:'Vòng charm vàng mix đá', cat:'vong', emoji:'✨', price:380000, badge:null,  badgeText:'' },
-    { id:6,  name:'Vòng đá tự nhiên nhiều màu', cat:'vong', emoji:'🔮', price:290000, badge:null, badgeText:'' },
-    { id:7,  name:'Bông tai thả pha lê',   cat:'bong', emoji:'💎', price:220000, badge:'hot',  badgeText:'Bán chạy' },
-    { id:8,  name:'Bông tai tròn vàng 14K',cat:'bong', emoji:'🌕', price:195000, badge:null,   badgeText:'' },
-    { id:9,  name:'Bông tai bướm bạc',     cat:'bong', emoji:'🦋', price:240000, badge:'new',  badgeText:'Mới về' },
-    { id:10, name:'Dây chuyền tim vàng',   cat:'day',  emoji:'❤️', price:350000, badge:'hot',  badgeText:'Bán chạy' },
-    { id:11, name:'Dây chuyền ngôi sao bạc',cat:'day', emoji:'⭐', price:280000, badge:null,   badgeText:'' },
-    { id:12, name:'Dây chuyền vàng mỏng 45cm',cat:'day',emoji:'🪙',price:420000, badge:null,  badgeText:'' },
+    { id:1,  name:'Nhẫn hoa mặt đá xanh',       cat:'nhan', emoji:'💍', price:250000, badge:'hot',  badgeText:'Bán chạy',  desc:'Nhẫn bạc 925 đính đá xanh tự nhiên, thiết kế hình hoa tinh tế. Phù hợp đeo hàng ngày hoặc làm quà tặng.' },
+    { id:2,  name:'Nhẫn xoắn vàng 14K',          cat:'nhan', emoji:'🪡', price:320000, badge:null,   badgeText:'',          desc:'Nhẫn vàng 14K kiểu dáng xoắn độc đáo, bề mặt bóng mịn. Thiết kế thời trang, phù hợp nhiều phong cách.' },
+    { id:3,  name:'Nhẫn bạc 925 đơn giản',       cat:'nhan', emoji:'⭕', price:180000, badge:'sale', badgeText:'Giảm giá',  desc:'Nhẫn bạc 925 nguyên chất, thiết kế tối giản thanh lịch. Không gỉ, không đổi màu khi đeo lâu dài.' },
+    { id:4,  name:'Vòng tay ngọc trai trắng',    cat:'vong', emoji:'📿', price:450000, badge:'new',  badgeText:'Mới về',    desc:'Vòng tay ngọc trai nước ngọt tự nhiên màu trắng sữa, mỗi hạt đều được chọn lọc kỹ lưỡng về kích thước và độ bóng.' },
+    { id:5,  name:'Vòng charm vàng mix đá',      cat:'vong', emoji:'✨', price:380000, badge:null,   badgeText:'',          desc:'Vòng tay charm vàng phối đá màu, có thể thêm bớt charm theo sở thích. Năng động và cá tính.' },
+    { id:6,  name:'Vòng đá tự nhiên nhiều màu',  cat:'vong', emoji:'🔮', price:290000, badge:null,   badgeText:'',          desc:'Vòng tay kết từ các hạt đá tự nhiên đa sắc, mỗi viên đá mang năng lượng tích cực riêng.' },
+    { id:7,  name:'Bông tai thả pha lê',         cat:'bong', emoji:'💎', price:220000, badge:'hot',  badgeText:'Bán chạy',  desc:'Bông tai thả pha lê Swarovski lấp lánh, dài 4cm. Phù hợp đi tiệc, chụp ảnh hay dạo phố.' },
+    { id:8,  name:'Bông tai tròn vàng 14K',      cat:'bong', emoji:'🌕', price:195000, badge:null,   badgeText:'',          desc:'Bông tai tròn vàng 14K kiểu classic không bao giờ lỗi mốt. Size vừa phải, đeo thoải mái suốt ngày.' },
+    { id:9,  name:'Bông tai bướm bạc',           cat:'bong', emoji:'🦋', price:240000, badge:'new',  badgeText:'Mới về',    desc:'Bông tai hình bướm bạc 925 đính đá nhỏ lung linh. Nhẹ nhàng, nữ tính và rất hợp với tóc buộc cao.' },
+    { id:10, name:'Dây chuyền tim vàng',         cat:'day',  emoji:'❤️', price:350000, badge:'hot',  badgeText:'Bán chạy',  desc:'Dây chuyền vàng 14K mặt hình trái tim, dây mảnh thanh thoát dài 42cm có khóa điều chỉnh.' },
+    { id:11, name:'Dây chuyền ngôi sao bạc',     cat:'day',  emoji:'⭐', price:280000, badge:null,   badgeText:'',          desc:'Dây chuyền bạc 925 mặt ngôi sao 5 cánh, thiết kế nhỏ nhắn xinh xắn. Phù hợp đeo hàng ngày.' },
+    { id:12, name:'Dây chuyền vàng mỏng 45cm',  cat:'day',  emoji:'🪙', price:420000, badge:null,   badgeText:'',          desc:'Dây chuyền vàng 14K kiểu dây mỏng dài 45cm, sang trọng và tinh tế. Có thể đeo đơn hoặc layering cùng dây khác.' },
   ];
 
-  // ═══════════════════════════════════════════════════
-  // LOGIC — KHÔNG CẦN THAY ĐỔI PHẦN NÀY
-  // ═══════════════════════════════════════════════════
+  const CAT_LABELS = { nhan:'Nhẫn', vong:'Vòng tay', bong:'Bông tai', day:'Dây chuyền' };
+  const CAT_EMOJIS = { nhan:'💍', vong:'📿', bong:'✨', day:'🪙' };
+
   let cart = {};
   let currentFilter = 'all';
 
-  const CAT_LABELS = { nhan:'Nhẫn', vong:'Vòng tay', bong:'Bông tai', day:'Dây chuyền' };
-
   function fmt(n) {
     return n.toLocaleString('vi-VN') + 'đ';
+  }
+
+  // ── Render category counts dynamically ──
+  function renderCategories() {
+    const grid = document.getElementById('cat-grid');
+    const cats = ['nhan','vong','bong','day'];
+    grid.innerHTML = cats.map(cat => {
+      const count = PRODUCTS.filter(p => p.cat === cat).length;
+      return `<div class="cat-card" onclick="scrollToFilter('${cat}')">
+        <span class="cat-emoji">${CAT_EMOJIS[cat]}</span>
+        <div class="cat-name">${CAT_LABELS[cat]}</div>
+        <div class="cat-count">${count} mẫu</div>
+      </div>`;
+    }).join('');
   }
 
   function renderProducts() {
@@ -802,7 +784,7 @@ html,body{
       : PRODUCTS.filter(p => p.cat === currentFilter);
 
     grid.innerHTML = list.map(p => `
-      <div class="product-card">
+      <div class="product-card" onclick="openDetail(${p.id})">
         <div class="product-img">
           ${p.badge ? `<span class="product-badge badge-${p.badge}">${p.badgeText}</span>` : ''}
           ${p.emoji}
@@ -812,7 +794,7 @@ html,body{
           <div class="product-cat">${CAT_LABELS[p.cat]}</div>
           <div class="product-bottom">
             <span class="product-price">${fmt(p.price)}</span>
-            <button class="add-btn" onclick="addToCart(${p.id})" title="Thêm vào giỏ">+</button>
+            <button class="add-btn" onclick="event.stopPropagation(); addToCart(${p.id})" title="Thêm vào giỏ">+</button>
           </div>
         </div>
       </div>
@@ -830,11 +812,48 @@ html,body{
     document.getElementById('san-pham').scrollIntoView({ behavior: 'smooth' });
     setTimeout(() => {
       const btn = [...document.querySelectorAll('.filter-btn')]
-        .find(b => b.getAttribute('onclick').includes(`'${cat}'`));
+        .find(b => b.getAttribute('onclick') && b.getAttribute('onclick').includes(`'${cat}'`));
       if (btn) setFilter(cat, btn);
     }, 500);
   }
 
+  // ── Product Detail Modal ──
+  function openDetail(id) {
+    const p = PRODUCTS.find(x => x.id === id);
+    document.getElementById('detail-emoji').textContent = p.emoji;
+    document.getElementById('detail-cat').textContent = CAT_LABELS[p.cat];
+    document.getElementById('detail-name').textContent = p.name;
+    document.getElementById('detail-price').textContent = fmt(p.price);
+    document.getElementById('detail-desc').textContent = p.desc;
+
+    const badge = document.getElementById('detail-badge');
+    if (p.badge) {
+      badge.textContent = p.badgeText;
+      badge.className = `product-badge badge-${p.badge}`;
+      badge.style.display = 'inline-block';
+    } else {
+      badge.style.display = 'none';
+    }
+
+    document.getElementById('detail-add-btn').onclick = () => {
+      addToCart(p.id);
+      closeDetailBtn();
+    };
+
+    document.getElementById('detail-overlay').classList.add('open');
+  }
+
+  function closeDetail(e) {
+    if (e.target === document.getElementById('detail-overlay')) {
+      closeDetailBtn();
+    }
+  }
+
+  function closeDetailBtn() {
+    document.getElementById('detail-overlay').classList.remove('open');
+  }
+
+  // ── Cart ──
   function addToCart(id) {
     cart[id] = (cart[id] || 0) + 1;
     updateCartCount();
@@ -930,10 +949,8 @@ html,body{
       `\nTổng: ${fmt(total)}`
     );
 
-    document.getElementById('zalo-link').href =
-      `https://zalo.me/${CONFIG.zaloPhone}?text=${msg}`;
+    document.getElementById('zalo-link').href = `https://zalo.me/${CONFIG.zaloPhone}?text=${msg}`;
     document.getElementById('fb-link').href = CONFIG.facebookUrl;
-
     document.getElementById('order-modal').classList.add('open');
   }
 
@@ -964,6 +981,7 @@ html,body{
   }
 
   // Init
+  renderCategories();
   renderProducts();
 </script>
 </body>
