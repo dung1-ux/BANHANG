@@ -698,6 +698,12 @@ footer strong{color:rgba(255,255,255,0.8)}
         <div class="inv-meta-cell full"><div class="inv-meta-lbl">Địa chỉ</div><div class="inv-meta-val" id="inv-address">—</div></div>
       </div>
       <div class="invoice-items" id="inv-items"></div>
+      <div style="padding:12px;text-align:center">
+        <div class="qr-img-wrap" style="width:140px;height:140px;margin:0 auto 12px;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:#fff">
+          <img id="inv-qr-img" src="" alt="QR mã đơn">
+        </div>
+        <div style="font-size:12px;color:var(--muted)">Quét mã để xem thông tin đơn</div>
+      </div>
       <div class="invoice-footer">
         <div class="inv-total-row">
           <span class="inv-total-lbl">Tổng thanh toán</span>
@@ -749,7 +755,7 @@ let qrTimer=null, qrSecs=900;
 const CAT={nhan:'Nhẫn',vong:'Vòng tay',bong:'Bông tai',day:'Dây chuyền'};
 
 /* ═══ STORAGE ═══ */
-function loadProds(){try{const s=localStorage.getItem('vnd_products2');return s?JSON.parse(s):[]}catch{return[]}}
+function loadProds(){try{const s=localStorage.getItem('vnd_products2');return s?JSON.parse(s):[]}catch{return []}}
 function loadCart(){try{const s=localStorage.getItem('vnd_cart');return s?JSON.parse(s):{}}catch{return{}}}
 function saveCart(){localStorage.setItem('vnd_cart',JSON.stringify(cart))}
 function saveOrder(o){
@@ -796,7 +802,45 @@ function onSearch(q){
   d.innerHTML=res.map(p=>`<div class="search-item" onclick="srchOpen(${p.id})"><div class="search-item-img">${p.image?`<img src="${p.image}">`:(p.emoji||'🪙')}</div><div><div class="search-item-name">${p.name}</div><div class="search-item-price">${fmt(p.price)}</div></div></div>`).join('');
   d.classList.add('open');
 }
-function srchOpen(id){closeDrop();toggleSearch();setTimeout(()=>openPd(id),100)}
+function srchOpen(id){
+  closeDrop();
+  toggleSearch();
+  setTimeout(()=>openPd(id),100);
+}
+function matchCategory(q){
+  if(!q) return null;
+  q=q.toLowerCase();
+  if(q.includes('nhẫn')||q.includes('nhan')) return 'nhan';
+  if(q.includes('vòng')||q.includes('vong')||q.includes('vòng tay')) return 'vong';
+  if(q.includes('bông')||q.includes('bong')) return 'bong';
+  if(q.includes('dây')||q.includes('day')||q.includes('dây chuyền')) return 'day';
+  return null;
+}
+const _si = document.getElementById('search-input');
+if(_si){
+  _si.addEventListener('keydown', e=>{
+    if(e.key==='Enter'){
+      const q=_si.value.trim();
+      if(!q) return;
+      const cat = matchCategory(q);
+      closeDrop();
+      toggleSearch();
+      if(cat) scrollToFilter(cat);
+      else {
+        document.getElementById('san-pham').scrollIntoView({behavior:'smooth'});
+        currentFilter='all';
+        document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+        document.querySelector('.filter-btn').classList.add('active');
+        setTimeout(()=>{
+          const q2=e.target.value.toLowerCase();
+          const found=PRODUCTS.find(p=>p.name.toLowerCase().includes(q2)&&p.status!==0);
+          if(found) openPd(found.id);
+          else renderProds();
+        },500);
+      }
+    }
+  });
+}
 document.addEventListener('click',e=>{if(!document.getElementById('nav-search').contains(e.target))closeDrop()});
 
 /* ═══ PRODUCTS ═══ */
@@ -982,6 +1026,8 @@ function confirmOrder(){
     cart={};updateCount();saveCart();
     showSuccess('cod');
   } else {
+    // Lưu đơn với trạng thái chờ thanh toán trước khi hiển thị QR
+    saveOrder(orderData);
     showQr(selPayMethod,total,orderCode,customer.name);
   }
 }
@@ -1014,10 +1060,25 @@ function updateQrCd(){const m=Math.floor(qrSecs/60),s=qrSecs%60;document.getElem
 
 function markPaid(){
   stopQrTimer();
-  orderData.paymentStatus='paid';
-  saveOrder(orderData);
-  cart={};updateCount();saveCart();
-  showSuccess(selPayMethod);
+  // Cập nhật trạng thái đơn trong localStorage thay vì chỉ dựa vào biến orderData
+  try{
+    const oc = (orderData && orderData.orderCode) || orderCode || '';
+    if(!oc){toast('Không tìm thấy mã đơn để xác nhận');return}
+    const all = JSON.parse(localStorage.getItem('vnd_orders')||'[]');
+    const idx = all.findIndex(o=>o.orderCode===oc);
+    if(idx!==-1){
+      all[idx].paymentStatus='paid';
+      localStorage.setItem('vnd_orders',JSON.stringify(all));
+      orderData = all[idx];
+    } else {
+      // Nếu không tìm thấy, cố gắng cập nhật orderData trực tiếp
+      if(orderData) orderData.paymentStatus='paid';
+      saveOrder(orderData);
+    }
+    cart={};updateCount();saveCart();
+    toast('Đã ghi nhận thanh toán');
+    showSuccess(selPayMethod);
+  }catch(e){console.error(e);toast('Lỗi khi cập nhật đơn');}
 }
 
 function showSuccess(method){
@@ -1048,6 +1109,9 @@ function showSuccess(method){
   document.getElementById('inv-items').innerHTML=orderData.items.map(it=>`<div class="inv-item-row"><div class="inv-item-left"><span class="inv-item-emoji">${it.emoji||'🪙'}</span><div><div class="inv-item-name">${it.name}</div><div class="inv-item-qty">×${it.qty} · ${fmt(it.price)}/cái</div></div></div><div class="inv-item-price">${fmt(it.price*it.qty)}</div></div>`).join('');
   document.getElementById('inv-total').textContent=fmt(orderData.total);
   document.getElementById('inv-pay-row').textContent=CFG.payLabel[method]||method;
+  // Tạo mã QR cho hóa đơn (thông tin đơn hàng cơ bản)
+  const invQrData = `Mã đơn: ${orderData.orderCode}\nTổng: ${fmt(orderData.total)}\nKhách: ${orderData.customer.name}\nSĐT: ${orderData.customer.phone}`;
+  document.getElementById('inv-qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(invQrData)}&bgcolor=ffffff&color=000000`;
   document.getElementById('invoice-wrap').style.display='block';
   // Zalo link
   const zMsg=encodeURIComponent(`Xin chào ${CFG.shopName}!\nMã đơn: ${orderData.orderCode}\n`+orderData.items.map(it=>`- ${it.name} ×${it.qty} = ${fmt(it.price*it.qty)}`).join('\n')+`\nTổng: ${fmt(orderData.total)}\nThanh toán: ${CFG.payLabel[method]}\nXác nhận giúp mình nhé!`);
@@ -1060,12 +1124,52 @@ function copyCode(btn){
 }
 
 function printInvoice(){
-  if(!orderData)return;
-  const{orderCode:oc,total,items,customer,paymentMethod:pm}=orderData;
-  const now=new Date(orderData.now);
-  document.getElementById('print-area').innerHTML=`<div class="p-head"><div><div class="p-shop">✦ <span>VU NHU</span> DUNG</div><div style="font-size:11px;color:#7a746e;text-transform:uppercase;letter-spacing:.1em">Hóa đơn mua hàng</div></div><div style="text-align:right"><div style="font-size:10px;color:#7a746e">Mã đơn</div><div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:#b8955a;font-weight:600">${oc}</div></div></div><div class="p-meta"><div><div class="lbl">Ngày đặt</div><div class="val">${fmtDate(now)}</div></div><div><div class="lbl">Khách hàng</div><div class="val">${customer?.name||'—'}</div></div><div><div class="lbl">SĐT</div><div class="val">${customer?.phone||'—'}</div></div><div><div class="lbl">Địa chỉ</div><div class="val">${customer?.address||'—'}</div></div><div><div class="lbl">Thanh toán</div><div class="val">${CFG.payLabel[pm]||pm}</div></div></div><table><thead><tr><th>Sản phẩm</th><th style="text-align:center">SL</th><th>Đơn giá</th><th>Thành tiền</th></tr></thead><tbody>${items.map(it=>`<tr><td>${it.emoji||'🪙'} ${it.name}</td><td style="text-align:center">${it.qty}</td><td>${fmt(it.price)}</td><td>${fmt(it.price*it.qty)}</td></tr>`).join('')}</tbody></table><div class="p-total-row"><span style="font-size:14px;font-weight:500">Tổng thanh toán</span><span class="p-total-val">${fmt(total)}</span></div><div class="p-note">📌 Liên hệ Zalo <strong>${CFG.zalo}</strong> để xác nhận đơn hàng.</div><div class="p-footer">Cảm ơn quý khách đã tin tưởng <strong>VU NHU DUNG</strong> · ${CFG.addr}</div>`;
+  if(!orderData) return;
+  const {orderCode:oc,total,items,customer,paymentMethod:pm} = orderData;
+  const now = new Date(orderData.now);
+
+  // Tạo QR cho in hóa đơn
+  const invQrData = `Mã đơn: ${oc}\nTổng: ${fmt(total)}\nKhách: ${customer?.name||''}\nSĐT: ${customer?.phone||''}`;
+  const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(invQrData)}&bgcolor=ffffff&color=000000`;
+
+  document.getElementById('print-area').innerHTML = `
+    <div class="p-head">
+      <div>
+        <div class="p-shop">✦ <span>VU NHU</span> DUNG</div>
+        <div style="font-size:11px;color:#7a746e;text-transform:uppercase;letter-spacing:.1em">Hóa đơn mua hàng</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:10px;color:#7a746e">Mã đơn</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:#b8955a;font-weight:600">${oc}</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:18px;align-items:center;margin-top:12px">
+      <div style="flex:1">
+        <div class="p-meta">
+          <div><div class="lbl">Ngày đặt</div><div class="val">${fmtDate(now)}</div></div>
+          <div><div class="lbl">Khách hàng</div><div class="val">${customer?.name||'—'}</div></div>
+          <div><div class="lbl">SĐT</div><div class="val">${customer?.phone||'—'}</div></div>
+          <div><div class="lbl">Địa chỉ</div><div class="val">${customer?.address||'—'}</div></div>
+          <div><div class="lbl">Thanh toán</div><div class="val">${CFG.payLabel[pm]||pm}</div></div>
+        </div>
+      </div>
+      <div style="width:200px;flex-shrink:0;text-align:center">
+        <img src="${qrSrc}" style="width:160px;height:160px;object-fit:cover;border:1px solid #eee;border-radius:8px" alt="QR mã đơn">
+        <div style="font-size:12px;color:#7a746e;margin-top:6px">Quét mã để xem đơn</div>
+      </div>
+    </div>
+    <table style="margin-top:12px">
+      <thead><tr><th>Sản phẩm</th><th style="text-align:center">SL</th><th>Đơn giá</th><th>Thành tiền</th></tr></thead>
+      <tbody>${items.map(it=>`<tr><td>${it.emoji||'🪙'} ${it.name}</td><td style="text-align:center">${it.qty}</td><td>${fmt(it.price)}</td><td>${fmt(it.price*it.qty)}</td></tr>`).join('')}</tbody>
+    </table>
+    <div class="p-total-row"><span style="font-size:14px;font-weight:500">Tổng thanh toán</span><span class="p-total-val">${fmt(total)}</span></div>
+    <div class="p-note">📌 Liên hệ Zalo <strong>${CFG.zalo}</strong> để xác nhận đơn hàng.</div>
+    <div class="p-footer">Cảm ơn quý khách đã tin tưởng <strong>VU NHU DUNG</strong> · ${CFG.addr}</div>
+  `;
+
   window.print();
 }
+
 
 function closeModal(){
   stopQrTimer();
